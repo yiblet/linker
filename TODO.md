@@ -1,0 +1,1 @@
+The Linker basically works. At this point features are to add more functionality or to make things go faster. Being candid, we can probably live with the linker as is for a long time. More features / functionality is absolutely not needed. 
