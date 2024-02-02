@@ -10,22 +10,23 @@ mod write;
 use clap::Parser;
 use std::path::PathBuf;
 
-/// A program to auto-link a glob of markdowns. 
-/// All markdowns must have the following front matter: 
-/// --- 
-/// keywords: 
+/// A program to auto-link a glob of markdowns.
+/// All markdowns must have the following front matter:
+///
+/// ---
+/// keywords:
 ///     - <key1>
-///     - <key2> 
+///     - <key2>
 /// slug: <slug>
 /// ---
 ///
-/// The program will read in all keywords and slugs from all markdowns 
-/// and then identify uses of those keywords throughout the 
+/// The program will read in all keywords and slugs from all markdowns
+/// and then identify uses of those keywords throughout the
 /// glob of markdowns and create links accordingly.
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 struct Args {
     /// the glob of markdowns affected
-    glob: String, 
+    glob: String,
     /// the path to the folder preserving folder structure
     output: PathBuf,
 }
