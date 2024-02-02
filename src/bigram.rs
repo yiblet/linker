@@ -41,7 +41,7 @@ impl BigramModel {
     }
 
     pub fn logprob(&self, words: &[&str]) -> f64 {
-        if words.len() < 1 {
+        if words.is_empty() {
             return 0.0;
         }
         if words.len() == 1 {
@@ -84,7 +84,7 @@ impl BigramModel {
     }
 
     pub fn conditional_logprob(&self, words: &[&str]) -> f64 {
-        if words.len() < 1 {
+        if words.is_empty() {
             return 0.0;
         }
         if words.len() == 1 {

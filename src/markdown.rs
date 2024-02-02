@@ -28,7 +28,7 @@ where
         | NodeValue::Strong
         | NodeValue::Emph
         | NodeValue::Link(..)
-        | NodeValue::Image(..) => return,
+        | NodeValue::Image(..) => (),
         // For paragraph nodes, apply the helper function to the text nodes within it
         NodeValue::Paragraph => {
             for c in node.children() {
@@ -43,7 +43,6 @@ where
                     }
                 }
             }
-            return;
         }
         // For all other node types, recurse into their children
         _ => {
@@ -58,13 +57,13 @@ pub fn add_links<'a, F>(arena: &'a Arena<AstNode<'a>>, node: &'a AstNode<'a>, mu
 where
     F: FnMut(&str) -> Vec<(usize, usize, String)>,
 {
-    alter_text(&arena, node, &mut |arena, text: &str| {
+    alter_text(arena, node, &mut |arena, text: &str| {
         let mut new_nodes: Vec<&AstNode> = vec![];
 
         let mut links = helper(text);
         links.sort();
 
-        if links.len() == 0 {
+        if links.is_empty() {
             return None;
         }
 
@@ -102,7 +101,7 @@ where
             new_nodes.push(segment(cur, text.len()));
         }
 
-        if new_nodes.len() == 0 {
+        if new_nodes.is_empty() {
             None
         } else {
             Some(new_nodes)
@@ -196,7 +195,7 @@ Another paragraph.";
                 new_nodes.push(arena.alloc(segment_node));
             }
 
-            if new_nodes.len() == 0 {
+            if new_nodes.is_empty() {
                 None
             } else {
                 Some(new_nodes)

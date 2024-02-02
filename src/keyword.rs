@@ -19,7 +19,7 @@ impl Keywords {
         let slug = slug.trim();
         for keyword in keywords {
             let keyword = keyword.as_ref().to_lowercase();
-            let slugs = self.map.entry(keyword).or_insert(Default::default());
+            let slugs = self.map.entry(keyword).or_default();
             slugs.insert(slug.to_string());
         }
     }

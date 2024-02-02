@@ -26,9 +26,9 @@ impl Candidate {
     }
 }
 
-fn generate_candidates<'a, R: Rng>(
+fn generate_candidates<R: Rng>(
     keywords: &keyword::Keywords,
-    paragraph: &'a str,
+    paragraph: &str,
     doc: &document::Document,
     rng: &mut R,
 ) -> Vec<Candidate> {
@@ -70,7 +70,7 @@ fn generate_candidates<'a, R: Rng>(
 }
 
 // TODO: returning the String is an additional allocation that is not necessary
-fn update_content<'a>(keywords: &keyword::Keywords, content: &'a str) -> anyhow::Result<String> {
+fn update_content(keywords: &keyword::Keywords, content: &str) -> anyhow::Result<String> {
     // helper functions
     let is_already_seen =
         |candidate: &Candidate, seen_keywords: &HashSet<String>, seen_urls: &HashSet<String>| {
@@ -78,9 +78,9 @@ fn update_content<'a>(keywords: &keyword::Keywords, content: &'a str) -> anyhow:
         };
 
     // set up
-    let doc = document::Document::parse(&content)?;
+    let doc = document::Document::parse(content)?;
     let arena = comrak::Arena::new();
-    let ast = comrak::parse_document(&arena, &doc.document, &Default::default());
+    let ast = comrak::parse_document(&arena, doc.document, &Default::default());
     let mut rng = rand::thread_rng(); // used to sample a candidate if there are multiple available
 
     let mut added_url: HashSet<String> = HashSet::new();
