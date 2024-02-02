@@ -1,3 +1,11 @@
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("missing front matter")]
+    MissingFrontMatter,
+    #[error("front matter does not have slug or keywords list: {0}")]
+    FrontMatterMismatch(serde_yaml::Error),
+}
+
 #[derive(Debug, serde::Deserialize, Clone)]
 pub struct FrontMatter<'a> {
     pub slug: &'a str,
@@ -5,8 +13,9 @@ pub struct FrontMatter<'a> {
 }
 
 impl<'a> FrontMatter<'a> {
-    fn parse(content: &'a str) -> anyhow::Result<Self> {
-        let parsed_fm: FrontMatter = serde_yaml::from_str(content)?;
+    fn parse(content: &'a str) -> Result<Self, Error> {
+        let parsed_fm: FrontMatter =
+            serde_yaml::from_str(content).map_err(Error::FrontMatterMismatch)?;
         Ok(parsed_fm)
     }
 }
@@ -19,10 +28,10 @@ pub struct Document<'a> {
 }
 
 impl<'a> Document<'a> {
-    pub fn parse(content: &'a str) -> anyhow::Result<Self> {
+    pub fn parse(content: &'a str) -> Result<Self, Error> {
         let (fm, md) = match crate::front_matter::split_front_matter(content) {
             Some(fm_md) => fm_md,
-            None => return Err(anyhow::anyhow!("Failed to parse front matter")),
+            None => return Err(Error::MissingFrontMatter),
         };
         let front_matter = FrontMatter::parse(fm)?;
 

@@ -136,7 +136,11 @@ fn update_content(keywords: &keyword::Keywords, content: &str) -> anyhow::Result
     Ok(String::from_utf8(out)?)
 }
 
-pub fn update(keywords: &keyword::Keywords, glob_str: &str, output: &Path) -> anyhow::Result<()> {
+pub fn write_glob(
+    keywords: &keyword::Keywords,
+    glob_str: &str,
+    output: &Path,
+) -> anyhow::Result<()> {
     // Glob for markdown files
     for entry in glob::glob(glob_str)? {
         if glob_str.contains("..") {
@@ -152,7 +156,21 @@ pub fn update(keywords: &keyword::Keywords, glob_str: &str, output: &Path) -> an
         file.read_to_string(&mut content)?;
 
         log::info!("updating {}", path.to_string_lossy());
-        let updated_file = update_content(keywords, &content)?;
+
+        let updated_file = match update_content(keywords, &content) {
+            Ok(file) => file,
+            Err(err) => match err.downcast_ref::<document::Error>() {
+                Some(doc_err) => {
+                    log::warn!(
+                        "skipped updating {} since it's missing keywords or slugs: {}",
+                        path.to_string_lossy(),
+                        doc_err
+                    );
+                    content
+                }
+                None => Err(err)?,
+            },
+        };
 
         if let Some(parent) = output_path.parent() {
             create_dir_all(parent)?;

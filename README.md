@@ -31,10 +31,15 @@ Ensure you have Rust installed on your system. You can download Rust and find in
 After building the project, you can run mdlinker as follows:
 
 ```sh
-cargo run -- --glob "<path-to-markdown-files>/*.md" --output <path-to-output-directory>
-```
+Usage: mdlinker <GLOB> <OUTPUT>
 
-Replace `<path-to-markdown-files>` with the path to your directory containing the Markdown files you wish to process. Replace `<path-to-output-directory>` with the path where you want the processed files to be saved.
+Arguments:
+  <GLOB>
+  <OUTPUT>
+
+Options:
+  -h, --help  Print help
+```
 
 *Note*: The glob pattern must be enclosed in quotes to prevent shell expansion.
 

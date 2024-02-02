@@ -16,3 +16,4 @@ log = "0.4.19"
 rand = "0.8.5"
 serde = { version = "1.0.180", features = ["serde_derive"] }
 serde_yaml = "0.9.25"
+thiserror = "1.0.56"
